@@ -2,8 +2,8 @@
 #include <HTTPClient.h>
 #include <Wire.h>
 #define PCF8575_ADDR 0x20
-const char* ssid = "TP-LINK_EAD700";
-const char* password = "Skowronek";
+const char* ssid = "SSID";
+const char* password = "KLUCZ";
 const char* serverUrl = "http://gcygan.webd.pl/ob/ekran.php";
 
 void writePCF8575(uint16_t value) {
@@ -29,21 +29,10 @@ void loop() {
   if (WiFi.status() == WL_CONNECTED) {
     HTTPClient http;
     http.begin(serverUrl);
-    int httpCode = http.GET();
-    
+    int httpCode = http.GET();    
     if (httpCode == HTTP_CODE_OK) {
-      String payload = http.getString();
-
-//      payload.trim(); 
-/*
-      if (payload.startsWith("\xEF\xBB\xBF")){
-        payload = payload.substring(3); 
-      }
-*/      
-      Serial.print("Odebrano: ");
-      Serial.println(payload);
-      uint16_t value = (uint16_t) payload.toInt();
-      Serial.print("Wartosc: ");
+      String s = http.getString();
+      uint16_t value = (uint16_t) s.toInt();
       Serial.println(value);
       writePCF8575(~value);
     } else {
@@ -54,5 +43,5 @@ void loop() {
   } else {
     Serial.println("Brak WiFi");
   }
-  delay(2000); // odswiezanie co 2 sekundy
+  delay(2000);
 }
