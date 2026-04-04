@@ -2,8 +2,8 @@
 #include <HTTPClient.h>
 #include <Wire.h>
 #define PCF8575_ADDR 0x20
-const char* ssid = "SSID";
-const char* password = "PASS";
+const char* ssid = "TP-LINK_EAD700";
+const char* password = "Skowronek";
 const char* serverUrl = "http://gcygan.webd.pl/ob/ekran.php";
 
 void writePCF8575(uint16_t value) {
@@ -32,7 +32,14 @@ void loop() {
     int httpCode = http.GET();
     
     if (httpCode == HTTP_CODE_OK) {
-      String payload = http.getString();    
+      String payload = http.getString();
+
+//      payload.trim(); 
+/*
+      if (payload.startsWith("\xEF\xBB\xBF")){
+        payload = payload.substring(3); 
+      }
+*/      
       Serial.print("Odebrano: ");
       Serial.println(payload);
       uint16_t value = (uint16_t) payload.toInt();
